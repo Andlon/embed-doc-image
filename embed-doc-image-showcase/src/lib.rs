@@ -1,5 +1,8 @@
 //! Showcase for `embed-doc-image`.
 //!
+// Important: note the blank line of documentation on each side of the image lookup table.
+// The "image lookup table" can be placed anywhere, but we place it here together with the
+// warning if the `doc-images` feature is not enabled.
 #![cfg_attr(feature = "doc-images",
 cfg_attr(all(),
 doc = ::embed_doc_image::embed_image!("ferris", "images/rustacean-orig-noshadow-tiny.png"),
@@ -21,15 +24,16 @@ doc = ::embed_doc_image::embed_image!("corro", "images/corro.svg")))]
 //!
 //! See the documentation for more information. In addition, you are encouraged to browse the
 //! source code for this showcase crate to see a fleshed out example of how the solution works.
+//!
 //! In addition to serving as a showcase, this crate is used to verify that the solution indeed
 //! works across both local installations and `docs.rs`.
 //! This is necessary because a proc macro crate cannot use its own macros in its own documentation.
 //!
-//! The below Ferris images are courtesy of [rustacean.net](https://rustacean.net).
-//!
 //! `embed-doc-image` should work across the usual web-supported file types
 //! (jpg, png, svg, gif, bmp). If you find that it does not work with your files, please
 //! file an issue.
+//!
+//! The below Ferris images are courtesy of [rustacean.net](https://rustacean.net).
 //!
 //! ![Original Ferris][ferris]
 //!
@@ -39,21 +43,85 @@ doc = ::embed_doc_image::embed_image!("corro", "images/corro.svg")))]
 //!
 //! ![Dancing Ferris][dancing-ferris]
 //!
-//! The above picture is included as
-//!
-//! TODO: Attribute ferris images to its website
-//!
 use embed_doc_image::embed_doc_image;
 
-/// Returns a ferris.
+/// Test that images render in function docs.
 ///
-/// ![Original Ferris][ferris]
-///
-/// But what about gestures?
-///
-/// ![Ferris makes gesture][gesture]
+/// ![Original Ferris][ferris] ![Ferris makes gesture][ferris-gesture]
 ///
 /// Some more docs.
+///
+/// ![Corro][corro] ![Dancing Ferris][dancing-ferris]
 #[embed_doc_image("ferris", "images/rustacean-orig-noshadow-tiny.png")]
-#[embed_doc_image("gesture", "images/rustacean-flat-gesture-tiny.png")]
-pub fn ferris() {}
+#[embed_doc_image("ferris-gesture", "images/rustacean-flat-gesture-tiny.png")]
+#[embed_doc_image("dancing-ferris", "images/dancing-ferris-tiny.gif")]
+#[embed_doc_image("corro", "images/corro.svg")]
+pub fn function_docs_work() {}
+
+/// Test that images render in module docs.
+///
+/// ![Original Ferris][ferris] ![Ferris makes gesture][ferris-gesture]
+///
+/// Some more docs.
+///
+/// ![Corro][corro] ![Dancing Ferris][dancing-ferris]
+#[embed_doc_image("ferris", "images/rustacean-orig-noshadow-tiny.png")]
+#[embed_doc_image("ferris-gesture", "images/rustacean-flat-gesture-tiny.png")]
+#[embed_doc_image("dancing-ferris", "images/dancing-ferris-tiny.gif")]
+#[embed_doc_image("corro", "images/corro.svg")]
+pub mod module_docs_work {}
+
+/// Test that images render in macro docs.
+///
+/// ![Original Ferris][ferris] ![Ferris makes gesture][ferris-gesture]
+///
+/// Some more docs.
+///
+/// ![Corro][corro] ![Dancing Ferris][dancing-ferris]
+#[embed_doc_image("ferris", "images/rustacean-orig-noshadow-tiny.png")]
+#[embed_doc_image("ferris-gesture", "images/rustacean-flat-gesture-tiny.png")]
+#[embed_doc_image("dancing-ferris", "images/dancing-ferris-tiny.gif")]
+#[embed_doc_image("corro", "images/corro.svg")]
+#[macro_export]
+macro_rules! macro_docs_work {
+    () => {}
+}
+
+/// Test that images render in struct docs.
+///
+/// ![Original Ferris][ferris] ![Ferris makes gesture][ferris-gesture]
+///
+/// Some more docs.
+///
+/// ![Corro][corro] ![Dancing Ferris][dancing-ferris]
+#[embed_doc_image("ferris", "images/rustacean-orig-noshadow-tiny.png")]
+#[embed_doc_image("ferris-gesture", "images/rustacean-flat-gesture-tiny.png")]
+#[embed_doc_image("dancing-ferris", "images/dancing-ferris-tiny.gif")]
+#[embed_doc_image("corro", "images/corro.svg")]
+pub struct StructDocsWork {}
+
+/// Test that images render in trait docs.
+///
+/// ![Original Ferris][ferris] ![Ferris makes gesture][ferris-gesture]
+///
+/// Some more docs.
+///
+/// ![Corro][corro] ![Dancing Ferris][dancing-ferris]
+#[embed_doc_image("ferris", "images/rustacean-orig-noshadow-tiny.png")]
+#[embed_doc_image("ferris-gesture", "images/rustacean-flat-gesture-tiny.png")]
+#[embed_doc_image("dancing-ferris", "images/dancing-ferris-tiny.gif")]
+#[embed_doc_image("corro", "images/corro.svg")]
+pub trait TraitDocsWork {}
+
+/// Test that images render in type docs.
+///
+/// ![Original Ferris][ferris] ![Ferris makes gesture][ferris-gesture]
+///
+/// Some more docs.
+///
+/// ![Corro][corro] ![Dancing Ferris][dancing-ferris]
+#[embed_doc_image("ferris", "images/rustacean-orig-noshadow-tiny.png")]
+#[embed_doc_image("ferris-gesture", "images/rustacean-flat-gesture-tiny.png")]
+#[embed_doc_image("dancing-ferris", "images/dancing-ferris-tiny.gif")]
+#[embed_doc_image("corro", "images/corro.svg")]
+pub type TypeAliasDocsWork = f64;
