@@ -4,7 +4,14 @@ version = "0.1.0"
 authors = ["Andreas Longva"]
 edition = "2018"
 
+[package.metadata.docs.rs]
+# docs.rs uses a nightly compiler, so by instructing it to use our `doc-images` feature we ensure that it will render
+# any images that we may have in our crate-level documentation.
+features = ["doc-images"]
+
 [features]
+# This is a necessary workaround so that we can embed images in crate-level documentation for Rust >= 1.54,
+# while at the same time have the code working (without images in crate-level documentation) for older compilers
 doc-images = []
 
 [dependencies]

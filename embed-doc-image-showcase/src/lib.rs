@@ -84,7 +84,7 @@ pub mod module_docs_work {}
 #[embed_doc_image("corro", "images/corro.svg")]
 #[macro_export]
 macro_rules! macro_docs_work {
-    () => {}
+    () => {};
 }
 
 /// Test that images render in struct docs.
