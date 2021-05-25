@@ -1,0 +1,11 @@
+[package]
+name = "embed-doc-image-showcase"
+version = "0.1.0"
+authors = ["Andreas Longva"]
+edition = "2018"
+
+[features]
+doc-images = []
+
+[dependencies]
+embed-doc-image = { version = "0.1", path = ".." }
