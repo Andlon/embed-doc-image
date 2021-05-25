@@ -33,14 +33,41 @@ fn encode_base64_image_from_path(path: &Path) -> String {
     base64::encode(bytes)
 }
 
+fn determine_mime_type(extension: &str) -> String {
+    let extension = extension.to_ascii_lowercase();
+
+    // TODO: Consider using the mime_guess crate? The below list does seem kinda exhaustive for
+    // doc purposes though?
+
+    // Matches taken haphazardly from
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+    match extension.as_str() {
+        "jpg" | "jpeg" => "image/jpeg",
+        "png" => "image/png",
+        "bmp" => "image/bmp",
+        "svg" => "image/svg+xml",
+        "gif" => "image/gif",
+        "tif" | "tiff" => "image/tiff",
+        "webp" => "image/webp",
+        "ico" => "image/vnd.microsoft.icon",
+        _ => panic!("Unrecognized image extension, unable to infer correct MIME type")
+    }.to_string()
+}
+
 fn produce_doc_string_for_image(image_desc: &ImageDescription) -> String {
     let root_dir = std::env::var("CARGO_MANIFEST_DIR")
         .expect("Failed to retrieve value of CARGO_MANOFEST_DIR.");
     let root_dir = Path::new(&root_dir);
     let encoded = encode_base64_image_from_path(&root_dir.join(&image_desc.path));
+    let ext = image_desc.path
+        .extension()
+        .expect(&format!("No extension for file {}. Unable to determine MIME type.",
+                         image_desc.path.display()));
+    let mime = determine_mime_type(&ext.to_string_lossy());
     let doc_string = format!(
-        " [{label}]: data:image/png;base64,{encoded}",
+        " [{label}]: data:{mime};base64,{encoded}",
         label = &image_desc.label,
+        mime = mime,
         encoded = &encoded
     );
     doc_string
