@@ -215,7 +215,7 @@ impl Parse for ImageDescription {
 }
 
 fn encode_base64_image_from_path(path: &Path) -> String {
-    let bytes = read(path).expect(&format!("Failed to load image at {}", path.display()));
+    let bytes = read(path).unwrap_or_else(|_| panic!("Failed to load image at {}", path.display()));
     base64::encode(bytes)
 }
 
@@ -246,10 +246,12 @@ fn produce_doc_string_for_image(image_desc: &ImageDescription) -> String {
         .expect("Failed to retrieve value of CARGO_MANOFEST_DIR.");
     let root_dir = Path::new(&root_dir);
     let encoded = encode_base64_image_from_path(&root_dir.join(&image_desc.path));
-    let ext = image_desc.path.extension().expect(&format!(
-        "No extension for file {}. Unable to determine MIME type.",
-        image_desc.path.display()
-    ));
+    let ext = image_desc.path.extension().unwrap_or_else(|| {
+        panic!(
+            "No extension for file {}. Unable to determine MIME type.",
+            image_desc.path.display()
+        )
+    });
     let mime = determine_mime_type(&ext.to_string_lossy());
     let doc_string = format!(
         " [{label}]: data:{mime};base64,{encoded}",
