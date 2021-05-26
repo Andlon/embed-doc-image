@@ -3,6 +3,13 @@ name = "embed-doc-image"
 version = "0.1.0"
 authors = ["Andreas Longva"]
 edition = "2018"
+description = "Embed images in Rust documentation"
+license = "MIT"
+documentation = "https://docs.rs/embed-doc-images"
+homepage = "github.com/Andlon/embed-doc-images"
+repository = "github.com/Andlon/embed-doc-images"
+categories = ["Development tools", "Rust patterns"]
+keywords = ["documentation", "rustdoc"]
 
 [lib]
 proc-macro = true
