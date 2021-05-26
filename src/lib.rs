@@ -1,3 +1,136 @@
+//! Embed images in documentation.
+//!
+//! This crate enables the portable embedding of images in
+//! `rustdoc`-generated documentation. See the [documentation][showcase-docs] as well as the
+//! source code for [the showcase crate][showcase] for a fleshed out example. Standard
+//! web-compatible image formats should be supported. Please [file an issue][issue-tracker]
+//! if you have problems. Read on to learn how it works.
+//!
+//! # Motivation
+//!
+//! A picture is worth a thousand words. This oft quoted adage is no less true for technical
+//! documentation. A carefully crafted diagram lets a new user to immediately
+//! grasp the high-level architecture of a complex library. Illustrations of geometric conventions
+//! can vastly reduce confusion among users of scientific libraries. Despite the central role
+//! of images in technical documentation, embedding images in Rust documentation in a way that
+//! portably works correctly across local installations and [docs.rs](https://docs.rs) has been a
+//! [longstanding issue of rustdoc][rustdoc-issue].
+//!
+//! This crate represents a carefully crafted solution based on procedural macros that works
+//! around the current limitations of `rustdoc` and enables a practically workable approach to
+//! embedding images in a portable manner.
+//!
+//! # How to embed images in documentation
+//!
+//! First, you'll need to depend on this crate. In `cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! // Replace x.x with the latest version
+//! embed-doc-image = "x.x"
+//! ```
+//!
+//! What the next step is depends on whether you want to embed images into *inner attribute
+//! documentation* or *outer attribute documentation*. In both cases, however, all image paths
+//! are relative to the **crate root**.
+//!
+//! ## Embedding images in outer attribute documentation
+//!
+//! Outer attribute documentation is typically used for documenting functions, structs, traits,
+//! macros and so on. Let's consider documenting a function and embedding an image into its
+//! documentation:
+//!
+//! ```rust
+//! // Import the attribute macro
+//! use embed_doc_image::embed_doc_image;
+//!
+//! /// Foos the bar.
+//! ///
+//! /// Let's drop an image below this text.
+//! ///
+//! /// ![Alt text goes here][myimagelabel]
+//! ///
+//! /// And another one.
+//! ///
+//! /// ![A Foobaring][foobaring]
+//! ///
+//! /// We can include any number of images in the above fashion. The important part is that
+//! /// you match the label ("myimagelabel" or "foobaring" in this case) with the label in the
+//! /// below attribute macro.
+//! // Paths are always relative to the **crate root**
+//! #[embed_doc_image("myimagelabel", "images/foo.png")]
+//! #[embed_doc_image("foobaring", "assets/foobaring.jpg")]
+//! fn foobar() {}
+//! ```
+//!
+//! And that's it! If you run `cargo doc`, you should hopefully be able to see your images
+//! in the documentation for `foobar`, and it should also work on `docs.rs` without trouble.
+//!
+//! ## Embedding images in inner attribute documentation
+//!
+//! The ability for macros to do *anything* with *inner attributes* is very limited. In fact,
+//! before Rust 1.54 (which at the time of writing has not yet been released),
+//! it is for all intents and purposes non-existent. This also means that we can not directly
+//! use our approach to embed images in documentation for Rust < 1.54. However, we can make our
+//! code compile with Rust < 1.54 and instead inject a prominent message that some images are
+//! missing.
+//! `docs.rs`, which always uses a nightly compiler, will be able to show the images. We'll
+//! also locally be able to properly embed the images as long as we're using Rust >= 1.54
+//! (or nightly). Here's how you can embed images in crate-level or module-level documentation:
+//!
+//! ```rust
+//! //! My awesome crate for fast foobaring in latent space.
+//! //!
+//! // Important: note the blank line of documentation on each side of the image lookup table.
+//! // The "image lookup table" can be placed anywhere, but we place it here together with the
+//! // warning if the `doc-images` feature is not enabled.
+//! #![cfg_attr(feature = "doc-images",
+//! cfg_attr(all(),
+//! doc = ::embed_doc_image::embed_image!("myimagelabel", "images/foo.png"),
+//! doc = ::embed_doc_image::embed_image!("foobaring", "assets/foobaring.png")))]
+//! #![cfg_attr(
+//! not(feature = "doc-images"),
+//! doc = "**Doc images not enabled**. Compile with feature `doc-images` and Rust version >= 1.54 \
+//!            to enable."
+//! )]
+//! //!
+//! //! Let's use our images:
+//! //! ![Alt text goes here][myimagelabel] ![A Foobaring][foobaring]
+//! ```
+//!
+//! Sadly there is currently no way to detect Rust versions in `cfg_attr`. Therefore we must
+//! rely on a feature flag for toggling proper image embedding. We'll need the following in our
+//! `Cargo.toml`:
+//!
+//! ```toml
+//! [features]
+//! doc-images = []
+//!
+//! [package.metadata.docs.rs]
+//! # docs.rs uses a nightly compiler, so by instructing it to use our `doc-images` feature we
+//! # ensure that it will render any images that we may have in inner attribute documentation.
+//! features = ["doc-images"]
+//! ```
+//!
+//! Let's summarize:
+//!
+//! - `docs.rs` will correctly render our documentation with images.
+//! - By default, the local documentation will be missing some images, and will contain a warning
+//!   with instructions on how to enable proper image embedding.
+//! - `cargo +nightly doc --features doc-images` will produce correct documentation. Alternatively,
+//!   we can skip `+nightly` if we're running Rust >= 1.54.
+//!
+//!
+//! # How it works
+//!
+//! [showcase]: https://crates.io/crates/embed-doc-image-showcase
+//! [showcase-docs]: https://docs.rs/embed-doc-image-showcase
+//! [rustdoc-issue]: https://github.com/rust-lang/rust/issues/32104
+//! [issue-tracker]: https://github.com/Andlon/embed-doc-image/issues
+//!
+//! # Acknowledgements
+//!
+
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 use std::fs::read;
