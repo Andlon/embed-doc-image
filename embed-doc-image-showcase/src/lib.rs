@@ -16,14 +16,15 @@ doc = ::embed_doc_image::embed_image!("corro", "images/corro.svg")))]
 )]
 //!
 //! This crate contains no functionality, it is merely a demonstration of how to use
-//! `embed-doc-image` to embed images local to the repository that work across both
-//! [docs.rs](https://docs.rs) and
+//! [embed-doc-image](https://crates.io/crates/embed-doc-image) to embed images local to the
+//! repository that work across both [docs.rs](https://docs.rs) and
 //! local documentation. The motivation for this crate is
 //! [rustdoc's inability to include local images](https://github.com/rust-lang/rust/issues/32104)
 //! in a way that consistently works across local copies of the repository and `docs.rs`.
 //!
-//! See the documentation for more information. In addition, you are encouraged to browse the
-//! source code for this showcase crate to see a fleshed out example of how the solution works.
+//! See [the documentation](https://docs.rs/embed-doc-image) for more information.
+//! In addition, you are encouraged to browse the source code for this showcase crate to see a
+//! fleshed out example of how the solution works.
 //!
 //! In addition to serving as a showcase, this crate is used to verify that the solution indeed
 //! works across both local installations and `docs.rs`.

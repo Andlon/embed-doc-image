@@ -1,11 +1,12 @@
 [package]
 name = "embed-doc-image-showcase"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Andreas Longva"]
 edition = "2018"
 readme = "README.md"
 license = "MIT"
 description = "Showcase for the embed-doc-images crate"
+documentation = "https://docs.rs/embed-doc-image-showcase"
 
 [package.metadata.docs.rs]
 # docs.rs uses a nightly compiler, so by instructing it to use our `doc-images` feature we ensure that it will render
