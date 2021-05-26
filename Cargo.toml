@@ -1,6 +1,6 @@
 [package]
 name = "embed-doc-image"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Andreas Longva"]
 edition = "2018"
 description = "Embed images in Rust documentation"
@@ -8,7 +8,7 @@ license = "MIT"
 documentation = "https://docs.rs/embed-doc-images"
 homepage = "https://github.com/Andlon/embed-doc-images"
 repository = "https://github.com/Andlon/embed-doc-images"
-categories = ["Development tools", "Rust patterns"]
+categories = ["development-tools", "rust-patterns"]
 keywords = ["documentation", "rustdoc"]
 
 [lib]
