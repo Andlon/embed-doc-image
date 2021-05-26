@@ -8,8 +8,7 @@ edition = "2018"
 proc-macro = true
 
 [dependencies]
-# TODO: Use only required features
-syn = { version="1.0.72", features = ["full"] }
+syn = { version="1.0.72", default-features=false, features = ["full", "parsing", "proc-macro", "printing"] }
 quote = "1.0.9"
 proc-macro2 = "1.0.27"
 base64 = "0.13"
