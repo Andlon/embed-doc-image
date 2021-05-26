@@ -115,20 +115,73 @@
 //! Let's summarize:
 //!
 //! - `docs.rs` will correctly render our documentation with images.
-//! - By default, the local documentation will be missing some images, and will contain a warning
-//!   with instructions on how to enable proper image embedding.
-//! - `cargo +nightly doc --features doc-images` will produce correct documentation. Alternatively,
-//!   we can skip `+nightly` if we're running Rust >= 1.54.
+//! - Locally:
+//!   - for Rust >= 1.54 with `--features doc-images`, the local documentation will
+//!       correctly render images.
+//!   - for Rust < 1.54: the local documentation will be missing some images, and will
+//!   contain a warning with instructions on how to enable proper image embedding.
+//!   - we can also use e.g. `cargo +nightly doc --features doc-images` to produce correct
+//!     documentation with a nightly compiler.
 //!
 //!
 //! # How it works
+//!
+//! The crux of the issue is that `rustdoc` does not have a mechanism for tracking locally stored
+//! images referenced by documentation and carry them over to the final documentation. Therefore
+//! currently images on `docs.rs` can only be included if you host the image somewhere on the
+//! internet and include the image with its URL. However, this has a number of issues:
+//!
+//! - You need to host the image, which incurs considerable additional effort on the part of
+//!   crate authors.
+//! - The image is only available for as long as the image is hosted.
+//! - Images in local documentation will not work without internet access.
+//! - Images are not *versioned*, unless carefully done so manually by the crate author. That is,
+//!   the author must carefully provide *all* versions of the image across all versions of the
+//!   crate with a consistent naming convention in order to ensure that documentation of
+//!   older versions of the crate display the image consistent with that particular version.
+//!
+//! The solution employed by this crate is based on a remark made in an old
+//! [reddit comment from 2017][reddit-comment]. In short, Rustdoc allows images to be provided
+//! inline in the Markdown as `base64` encoded binary blobs in the following way:
+//!
+//! ```rust
+//! ![Alt text][myimagelabel]
+//!
+//! [myimagelabel]: data:image/png;base64,BaSe64EnCoDeDdAtA
+//! ```
+//!
+//! Basically we can use the "reference" feature of Markdown links/images to provide the URL
+//! of the image in a different location than the image itself, but instead of providing an URL
+//! we can directly provide the binary data of the image in the Markdown documentation.
+//!
+//! However, doing this manually with images would terribly clutter the documentation, which
+//! seems less than ideal. Instead, we do this programmatically. The macros available in this
+//! crate essentially follow this idea:
+//!
+//! - Take a label and image path relative to the crate root as input.
+//! - Determine the MIME type (based on extension) and `base64` encoding of the image.
+//! - Produce an appropriate doc string and inject it into the Markdown documentation for the
+//!   crate/function/struct/etc.
+//!
+//! Clearly, this is still quite hacky, but it seems like a workable solution until proper support
+//! in `rustdoc` arrives, at which point we may rejoice and abandon this crate to the annals
+//! of history.
+//!
+//! # Acknowledgements
+//!
+//! As an inexperienced proc macro hacker, I would not have managed to arrive at this
+//! solution without the help of several individuals on the Rust Programming Language Community
+//! Discord server, most notably:
+//!
+//! - Yandros [(github.com/danielhenrymantilla)](https://github.com/danielhenrymantilla)
+//! - Nemo157 [(github.com/Nemo157)](https://github.com/Nemo157)
 //!
 //! [showcase]: https://crates.io/crates/embed-doc-image-showcase
 //! [showcase-docs]: https://docs.rs/embed-doc-image-showcase
 //! [rustdoc-issue]: https://github.com/rust-lang/rust/issues/32104
 //! [issue-tracker]: https://github.com/Andlon/embed-doc-image/issues
+//! [reddit-comment]: https://www.reddit.com/r/rust/comments/5ljshj/diagrams_in_documentation/dbwg96q?utm_source=share&utm_medium=web2x&context=3
 //!
-//! # Acknowledgements
 //!
 
 use proc_macro::TokenStream;
@@ -207,6 +260,9 @@ fn produce_doc_string_for_image(image_desc: &ImageDescription) -> String {
     doc_string
 }
 
+/// Produces a doc string for inclusion in Markdown documentation.
+///
+/// Please see the crate-level documentation for usage instructions.
 #[proc_macro]
 pub fn embed_image(item: TokenStream) -> TokenStream {
     let image_desc = syn::parse_macro_input!(item as ImageDescription);
@@ -221,6 +277,9 @@ pub fn embed_image(item: TokenStream) -> TokenStream {
     tokens.into()
 }
 
+/// Produces a doc string for inclusion in Markdown documentation.
+///
+/// Please see the crate-level documentation for usage instructions.
 #[proc_macro_attribute]
 pub fn embed_doc_image(attr: TokenStream, item: TokenStream) -> TokenStream {
     let image_desc = syn::parse_macro_input!(attr as ImageDescription);
