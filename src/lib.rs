@@ -1,10 +1,16 @@
 //! Embed images in documentation.
 //!
 //! This crate enables the portable embedding of images in
-//! `rustdoc`-generated documentation. See the [documentation][showcase-docs] as well as the
-//! source code for [the showcase crate][showcase] for a fleshed out example. Standard
+//! `rustdoc`-generated documentation. Standard
 //! web-compatible image formats should be supported. Please [file an issue][issue-tracker]
 //! if you have problems. Read on to learn how it works.
+//!
+//! # Showcase
+//!
+//! See the [showcase documentation][showcase-docs] for an example with embedded images.
+//!
+//! Please also check out the [source code][showcase-source] for [the showcase crate][showcase]
+//! for a fleshed out example.
 //!
 //! # Motivation
 //!
@@ -182,6 +188,7 @@
 //!
 //! [showcase]: https://crates.io/crates/embed-doc-image-showcase
 //! [showcase-docs]: https://docs.rs/embed-doc-image-showcase
+//! [showcase-source]: https://github.com/Andlon/embed-doc-image/tree/master/embed-doc-image-showcase
 //! [rustdoc-issue]: https://github.com/rust-lang/rust/issues/32104
 //! [issue-tracker]: https://github.com/Andlon/embed-doc-image/issues
 //! [reddit-comment]: https://www.reddit.com/r/rust/comments/5ljshj/diagrams_in_documentation/dbwg96q?utm_source=share&utm_medium=web2x&context=3
