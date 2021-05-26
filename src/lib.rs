@@ -31,8 +31,12 @@
 //! ```
 //!
 //! What the next step is depends on whether you want to embed images into *inner attribute
-//! documentation* or *outer attribute documentation*. In both cases, however, all image paths
-//! are relative to the **crate root**.
+//! documentation* or *outer attribute documentation*. Inner attribute documentation is usually
+//! used to document crate-level or module-level documentation, and typically starts each line with
+//! `//!`. Outer attribute docs are used for most other forms of documentation, such as function
+//! and struct documentation. Outer attribute documentation typically starts each line with `///`.
+//!
+//! In both cases all image paths are relative to the **crate root**.
 //!
 //! ## Embedding images in outer attribute documentation
 //!
