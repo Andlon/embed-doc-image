@@ -6,8 +6,8 @@ edition = "2018"
 description = "Embed images in Rust documentation"
 license = "MIT"
 documentation = "https://docs.rs/embed-doc-images"
-homepage = "github.com/Andlon/embed-doc-images"
-repository = "github.com/Andlon/embed-doc-images"
+homepage = "https://github.com/Andlon/embed-doc-images"
+repository = "https://github.com/Andlon/embed-doc-images"
 categories = ["Development tools", "Rust patterns"]
 keywords = ["documentation", "rustdoc"]
 
