@@ -15,7 +15,7 @@
 //! # Motivation
 //!
 //! A picture is worth a thousand words. This oft quoted adage is no less true for technical
-//! documentation. A carefully crafted diagram lets a new user to immediately
+//! documentation. A carefully crafted diagram lets a new user immediately
 //! grasp the high-level architecture of a complex library. Illustrations of geometric conventions
 //! can vastly reduce confusion among users of scientific libraries. Despite the central role
 //! of images in technical documentation, embedding images in Rust documentation in a way that
